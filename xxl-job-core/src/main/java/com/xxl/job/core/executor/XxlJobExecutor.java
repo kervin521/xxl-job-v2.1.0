@@ -144,7 +144,7 @@ public class XxlJobExecutor  {
                             LoadBalance.ROUND,
                             AdminBiz.class,
                             null,
-                            10000,
+                            3000,
                             addressUrl,
                             accessToken,
                             null,
