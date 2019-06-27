@@ -35,7 +35,7 @@
 			              	<table id="joblog_list" class="table table-bordered table-striped display" width="100%" >
 				                <thead>
 					            	<tr>
-                                        <#--<th name="id" >ID</th>-->
+                                        <th name="id" >ID</th>
                                         <th name="order" >${I18n.jobgroup_field_order}</th>
                                         <th name="appName" >AppName</th>
                                         <th name="title" >${I18n.jobgroup_field_title}</th>
@@ -48,7 +48,7 @@
 								<#if list?exists && list?size gt 0>
 								<#list list as group>
 									<tr>
-                                        <#--<td>${group.id}</td>-->
+                                        <td>${group.id}</td>
                                         <td>${group.order}</td>
                                         <td>${group.appName}</td>
                                         <td>${group.title}</td>
@@ -104,7 +104,7 @@
                         </div>
                         <div class="form-group">
                             <label for="lastname" class="col-sm-2 control-label">${I18n.jobgroup_field_title}<font color="red">*</font></label>
-                            <div class="col-sm-10"><input type="text" class="form-control" name="title" placeholder="${I18n.system_please_input}${I18n.jobgroup_field_title}" maxlength="12" ></div>
+                            <div class="col-sm-10"><input type="text" class="form-control" name="title" placeholder="${I18n.system_please_input}${I18n.jobgroup_field_title}" maxlength="20" ></div>
                         </div>
                         <div class="form-group">
                             <label for="lastname" class="col-sm-2 control-label">${I18n.jobgroup_field_order}<font color="red">*</font></label>
@@ -152,7 +152,7 @@
                         </div>
                         <div class="form-group">
                             <label for="lastname" class="col-sm-2 control-label">${I18n.jobgroup_field_title}<font color="red">*</font></label>
-                            <div class="col-sm-10"><input type="text" class="form-control" name="title" placeholder="${I18n.system_please_input}${I18n.jobgroup_field_title}" maxlength="12" ></div>
+                            <div class="col-sm-10"><input type="text" class="form-control" name="title" placeholder="${I18n.system_please_input}${I18n.jobgroup_field_title}" maxlength="20" ></div>
                         </div>
                         <div class="form-group">
                             <label for="lastname" class="col-sm-2 control-label">${I18n.jobgroup_field_order}<font color="red">*</font></label>

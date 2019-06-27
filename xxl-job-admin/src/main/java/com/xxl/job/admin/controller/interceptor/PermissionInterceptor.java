@@ -1,16 +1,21 @@
 package com.xxl.job.admin.controller.interceptor;
 
-import com.xxl.job.admin.controller.annotation.PermissionLimit;
-import com.xxl.job.admin.core.model.XxlJobUser;
-import com.xxl.job.admin.core.util.I18nUtil;
-import com.xxl.job.admin.service.LoginService;
-import org.springframework.stereotype.Component;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Component;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
+import com.xxl.job.admin.controller.JobInfoController;
+import com.xxl.job.admin.controller.annotation.PermissionLimit;
+import com.xxl.job.admin.core.model.XxlJobUser;
+import com.xxl.job.admin.core.util.I18nUtil;
+import com.xxl.job.admin.service.LoginService;
 
 /**
  * 权限拦截
@@ -25,11 +30,17 @@ public class PermissionInterceptor extends HandlerInterceptorAdapter {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		
 		if (!(handler instanceof HandlerMethod)) {
 			return super.preHandle(request, response, handler);
+		}else {
+			HandlerMethod method  =  (HandlerMethod)handler;
+			Object bean = method.getBean();
+			String methodName = method.getMethod().getName();
+			List<String> filter = Arrays.asList("pageList","add","update","remove","pause","start","triggerJob");
+			if(bean instanceof JobInfoController&&(filter.contains(methodName))) {
+				return super.preHandle(request, response, handler);
+			}
 		}
-
 		// if need login
 		boolean needLogin = true;
 		boolean needAdminuser = false;

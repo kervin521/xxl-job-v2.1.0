@@ -134,7 +134,7 @@ public class XxlJobScheduler implements InitializingBean, DisposableBean {
                 LoadBalance.ROUND,
                 ExecutorBiz.class,
                 null,
-                3000,
+                5000,
                 address,
                 XxlJobAdminConfig.getAdminConfig().getAccessToken(),
                 null,
