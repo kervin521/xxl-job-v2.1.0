@@ -36,10 +36,10 @@ public class XxlJobLogger {
             .append("["+ Thread.currentThread().getName() +"]").append(" ")
             .append(appendLog!=null?appendLog:"");
         String formatAppendLog = stringBuffer.toString();
-
+        boolean enabled = Boolean.parseBoolean(System.getProperty("xxl.job.log.enabled", "true"));
         // appendlog
         String logFileName = XxlJobFileAppender.contextHolder.get();
-        if (logFileName!=null && logFileName.trim().length()>0) {
+        if (enabled&&logFileName!=null && logFileName.trim().length()>0) {
             XxlJobFileAppender.appendLog(logFileName, formatAppendLog);
         } else {
             logger.info(">>>>>>>>>>> {}", formatAppendLog);
