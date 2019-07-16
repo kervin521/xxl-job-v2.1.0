@@ -36,6 +36,12 @@ import com.xxl.rpc.remoting.provider.XxlRpcProviderFactory;
 import com.xxl.rpc.serialize.Serializer;
 import com.xxl.rpc.util.IpUtil;
 import com.xxl.rpc.util.NetUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by xuxueli on 2016/3/2 21:14.
@@ -240,7 +246,7 @@ public class XxlJobExecutor  {
 
 
     // ---------------------- job handler repository ----------------------
-    private static ConcurrentHashMap<String, IJobHandler> jobHandlerRepository = new ConcurrentHashMap<String, IJobHandler>();
+    private static ConcurrentMap<String, IJobHandler> jobHandlerRepository = new ConcurrentHashMap<String, IJobHandler>();
     public static IJobHandler registJobHandler(String name, IJobHandler jobHandler){
         logger.info(">>>>>>>>>>> xxl-job register jobhandler success, name:{}, jobHandler:{}", name, jobHandler);
         return jobHandlerRepository.put(name, jobHandler);
@@ -251,7 +257,7 @@ public class XxlJobExecutor  {
 
 
     // ---------------------- job thread repository ----------------------
-    private static ConcurrentHashMap<Integer, JobThread> jobThreadRepository = new ConcurrentHashMap<Integer, JobThread>();
+    private static ConcurrentMap<Integer, JobThread> jobThreadRepository = new ConcurrentHashMap<Integer, JobThread>();
     public static JobThread registJobThread(int jobId, IJobHandler handler, String removeOldReason){
         JobThread newJobThread = new JobThread(jobId, handler);
         newJobThread.start();

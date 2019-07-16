@@ -11,7 +11,6 @@ import org.springframework.util.MultiValueMap;
 import javax.servlet.http.Cookie;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 public class JobInfoControllerTest extends AbstractSpringMvcTest {
 
@@ -31,15 +30,15 @@ public class JobInfoControllerTest extends AbstractSpringMvcTest {
   @Test
   public void testAdd() throws Exception {
     MultiValueMap<String, String> parameters = new LinkedMultiValueMap<String, String>();
-    parameters.add("jobGroup", "3");
+    parameters.add("jobGroup", "1");
 
     MvcResult ret = mockMvc.perform(
         post("/jobinfo/pageList")
-//            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             //.content(paramsJson)
             .params(parameters)
             .cookie(cookie)
-    ).andDo(print()).andReturn();
+    ).andReturn();
 
     System.out.println(ret.getResponse().getContentAsString());
   }

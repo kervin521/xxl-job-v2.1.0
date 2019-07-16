@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.xuxueli</groupId>
@@ -14,7 +15,7 @@
 		<module>xxl-job-core</module>
 		<module>xxl-job-admin</module>
 		<!-- <module>xxl-job-executor-samples</module> -->
-    </modules>
+	</modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -40,16 +41,8 @@
 
 		<maven-source-plugin.version>3.1.0</maven-source-plugin.version>
 		<maven-javadoc-plugin.version>3.1.0</maven-javadoc-plugin.version>
-		<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-		<maven-war-plugin.version>3.2.2</maven-war-plugin.version>
+		<maven-war-plugin.version>3.2.3</maven-war-plugin.version>
 	</properties>
-
-	<build>
-		<plugins>
-		</plugins>
-	</build>
-
-
 	<licenses>
 		<license>
 			<name>GNU General Public License version 3</name>
@@ -72,73 +65,33 @@
 		</developer>
 	</developers>
 
-	<profiles>
+	<build>
+		<plugins>
+			<!-- Source -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>${maven-source-plugin.version}</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 
-		<profile>
-			<id>release</id>
-			<build>
-				<plugins>
-					<!-- Source -->
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-source-plugin</artifactId>
-						<version>${maven-source-plugin.version}</version>
-						<executions>
-							<execution>
-								<phase>package</phase>
-								<goals>
-									<goal>jar-no-fork</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<!-- Javadoc -->
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>${maven-javadoc-plugin.version}</version>
-						<executions>
-							<execution>
-								<phase>package</phase>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-								<configuration>
-									<doclint>none</doclint>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<!-- GPG -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>${maven-gpg-plugin.version}</version>
-						<configuration>
-							<useAgent>false</useAgent>
-						</configuration>
-                        <executions>
-                            <execution>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-				</plugins>
-			</build>
-			<distributionManagement>
-				<snapshotRepository>
-					<id>oss</id>
-					<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-				</snapshotRepository>
-				<repository>
-					<id>oss</id>
-					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-				</repository>
-			</distributionManagement>
-		</profile>
-	</profiles>
-
+	<distributionManagement>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<url>http://172.21.32.31:8082/repository/maven-snapshots/</url>
+		</snapshotRepository>
+		<repository>
+			<id>releases</id>
+			<url>http://172.21.32.31:8082/repository/maven-releases/</url>
+		</repository>
+	</distributionManagement>
 </project>
