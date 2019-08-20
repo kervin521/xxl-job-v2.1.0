@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.FormattingTuple;
 import org.slf4j.helpers.MessageFormatter;
+import org.springframework.util.StringUtils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -14,7 +15,7 @@ import java.util.Date;
  * Created by xuxueli on 17/4/28.
  */
 public class XxlJobLogger {
-    private static Logger logger = LoggerFactory.getLogger("xxl-job logger");
+    private static Logger logger = LoggerFactory.getLogger(XxlJobLogger.class);
 
     /**
      * append log
@@ -36,7 +37,11 @@ public class XxlJobLogger {
             .append("["+ Thread.currentThread().getName() +"]").append(" ")
             .append(appendLog!=null?appendLog:"");
         String formatAppendLog = stringBuffer.toString();
-        boolean enabled = Boolean.parseBoolean(System.getProperty("xxl.job.log.enabled", "true"));
+        String enable = System.getenv("xxl.job.log.enabled");
+        if(StringUtils.isEmpty(enable)) {
+        	enable = System.getProperty("xxl.job.log.enabled", "true");
+        }
+        boolean enabled = Boolean.parseBoolean(enable);
         // appendlog
         String logFileName = XxlJobFileAppender.contextHolder.get();
         if (enabled&&logFileName!=null && logFileName.trim().length()>0) {

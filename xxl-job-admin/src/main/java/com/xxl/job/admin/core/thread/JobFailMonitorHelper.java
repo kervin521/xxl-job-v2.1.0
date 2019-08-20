@@ -52,10 +52,13 @@ public class JobFailMonitorHelper {
 
 								// lock log
 								int lockRet = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateAlarmStatus(failLogId, 0, -1);
-								if (lockRet < 1) {
+								if (lockRet < 1||failLogId<1) {
 									continue;
 								}
 								XxlJobLog log = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().load(failLogId);
+								if(log==null) {
+									continue;
+								}
 								XxlJobInfo info = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().loadById(log.getJobId());
 
 								// 1、fail retry monitor

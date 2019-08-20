@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,7 @@ import com.xxl.job.core.thread.ExecutorRegistryThread;
 import com.xxl.job.core.thread.JobLogFileCleanThread;
 import com.xxl.job.core.thread.JobThread;
 import com.xxl.job.core.thread.TriggerCallbackThread;
+import com.xxl.job.core.util.NetUtils;
 import com.xxl.rpc.registry.ServiceRegistry;
 import com.xxl.rpc.remoting.invoker.XxlRpcInvokerFactory;
 import com.xxl.rpc.remoting.invoker.call.CallType;
@@ -36,12 +38,6 @@ import com.xxl.rpc.remoting.provider.XxlRpcProviderFactory;
 import com.xxl.rpc.serialize.Serializer;
 import com.xxl.rpc.util.IpUtil;
 import com.xxl.rpc.util.NetUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by xuxueli on 2016/3/2 21:14.
@@ -100,9 +96,13 @@ public class XxlJobExecutor  {
         // init executor-server
         port = port>0?port: NetUtil.findAvailablePort(9999);
         ip = (ip!=null&&ip.trim().length()>0)?ip: IpUtil.getIp();
-        boolean auto = Boolean.parseBoolean(System.getProperty("xxl.job.ip.auto"));
+        String enabled = System.getenv("xxl.job.ip.auto");
+        if(StringUtils.isEmpty(enabled)) {
+        	enabled = System.getProperty("xxl.job.ip.auto");
+        }
+        boolean auto = Boolean.parseBoolean(enabled);
         if(auto) {
-        	String host = getLocalHost();
+        	String host = NetUtils.getLocalHost();
         	ip = (host!=null&&host.trim().length()>0)?host: ip;
         }
         initRpcProvider(ip, port, appName, accessToken);
@@ -282,71 +282,4 @@ public class XxlJobExecutor  {
         JobThread jobThread = jobThreadRepository.get(jobId);
         return jobThread;
     }
-    /**
-	 * 描述: 获取本地IP
-	 * 
-	 * @author ZhangYi
-	 * @date 2019-06-20 14:43:34
-	 * @return
-	 * @throws SocketException
-	 */
-	public static String getLocalHost() throws SocketException {
-		String local = "127.0.0.1";
-		Map<String, NetworkInterface> networks = networks();
-		for (Map.Entry<String, NetworkInterface> entry : networks.entrySet()) {
-			String host = entry.getKey();
-			NetworkInterface network = entry.getValue();
-			if (network.isLoopback() || network.isVirtual()) {
-				continue;
-			}
-			String[] splits = host.split("\\.");
-			if (splits.length != 4) {
-				continue;
-			}
-			if (!(host.startsWith("192.168") || host.startsWith("172.") && Integer.valueOf(splits[1]) >= 16 && Integer.valueOf(splits[1]) <= 31 || host.startsWith("10.") && Integer.valueOf(splits[1]) >= 0 && Integer.valueOf(splits[1]) <= 255)) {
-				continue;
-			}
-			if (host.endsWith(".0") || host.endsWith(".1") || host.endsWith(".255") || host.endsWith(".254")) {
-				continue;
-			}
-			if (!StringUtils.isEmpty(network.getDisplayName()) && network.getDisplayName().toLowerCase().contains("loopback")) {
-				continue;
-			}
-			return host;
-		}
-		return local;
-	}
-
-	/**
-	 * 
-	 * 描述: 获取主机所有地址对应网卡信息
-	 * 
-	 * @author ZhangYi
-	 * @date 2019-06-20 14:44:07
-	 * @return
-	 */
-	public static Map<String, NetworkInterface> networks() {
-		Map<String, NetworkInterface> networks = new HashMap<String, NetworkInterface>();
-		try {
-			Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
-			NetworkInterface networkInterface;
-			Enumeration<InetAddress> inetAddresses;
-			InetAddress inetAddress=null;
-			String ip=null;
-			while (networkInterfaces.hasMoreElements()) {
-				networkInterface = networkInterfaces.nextElement();
-				inetAddresses = networkInterface.getInetAddresses();
-				while (inetAddresses.hasMoreElements()) {
-					inetAddress = inetAddresses.nextElement();
-					if (inetAddress != null && inetAddress instanceof Inet4Address) { // IPV4
-						ip = inetAddress.getHostAddress();
-						networks.put(ip, networkInterface);
-					}
-				}
-			}
-		} catch (SocketException e) {
-			logger.error("network Interface error !",e);
-		}
-		return networks;
-	}
 }
