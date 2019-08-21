@@ -28,7 +28,7 @@ $(function() {
 	                	"data": 'id',
 						"bSortable": false,
 						"visible" : true,
-						"width":'10%'
+						"width":'7%'
 					},
 	                { 
 	                	"data": 'jobGroup', 
@@ -65,7 +65,7 @@ $(function() {
 					{
 						"data": 'jobCron',
 						"visible" : true,
-						"width":'10%'
+						"width":'13%'
 					},
 	                { 
 	                	"data": 'addTime', 
@@ -90,9 +90,9 @@ $(function() {
 	                	"render": function ( data, type, row ) {
                             // status
                             if (1 == data) {
-                                return '<small class="label label-success" ><i class="fa fa-clock-o"></i>RUNNING</small>';
+                                return '<small class="label label-success" >RUNNING</small>';
                             } else {
-                                return '<small class="label label-default" ><i class="fa fa-clock-o"></i>STOP</small>';
+                                return '<small class="label label-default" >STOP</small>';
                             }
 	                		return data;
 	                	}
@@ -133,9 +133,10 @@ $(function() {
                                     '     </button>\n' +
                                     '     <ul class="dropdown-menu" role="menu" _id="'+ row.id +'" >\n' +
                                     '       <li><a href="javascript:void(0);" class="job_trigger" >'+ I18n.jobinfo_opt_run +'</a></li>\n' +
-                                    start_stop_div +
                                     '       <li><a href="'+ logHref +'">'+ I18n.jobinfo_opt_log +'</a></li>\n' +
+                                    '       <li><a href="javascript:void(0);" class="job_registryinfo" >' + I18n.jobinfo_opt_registryinfo + '</a></li>\n' +
                                     '       <li class="divider"></li>\n' +
+                                    start_stop_div +
                                     codeBtn +
                                     '       <li><a href="javascript:void(0);" class="update" >'+ I18n.system_opt_edit +'</a></li>\n' +
                                     '       <li><a href="javascript:void(0);" class="job_operate" _type="job_del" >'+ I18n.system_opt_del +'</a></li>\n' +
@@ -274,6 +275,44 @@ $(function() {
     });
     $("#jobTriggerModal").on('hide.bs.modal', function () {
         $("#jobTriggerModal .form")[0].reset();
+    });
+
+
+    // job registryinfo
+    $("#job_list").on('click', '.job_registryinfo',function() {
+        var id = $(this).parents('ul').attr("_id");
+        var row = tableData['key'+id];
+
+        var jobGroup = row.jobGroup;
+
+        $.ajax({
+            type : 'POST',
+            url : base_url + "/jobgroup/loadById",
+            data : {
+                "id" : jobGroup
+            },
+            dataType : "json",
+            success : function(data){
+
+                var html = '<center>';
+                if (data.code == 200 && data.content.registryList) {
+                    for (var index in data.content.registryList) {
+                        html += '<span class="badge bg-green" >' + data.content.registryList[index] + '</span><br>';
+                    }
+                }
+                html += '</center>';
+
+                layer.open({
+                    title: I18n.jobinfo_opt_registryinfo ,
+                    btn: [ I18n.system_ok ],
+                    content: html
+                });
+
+            }
+        });
+
+
+
     });
 
 	// add

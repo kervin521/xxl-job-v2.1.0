@@ -212,14 +212,15 @@
 		SELECT <include refid="Base_Column_List" />
 		FROM xxl_job_info AS t
 		WHERE t.trigger_status = 1
-			and t.trigger_next_time<![CDATA[ < ]]> #{maxNextTime}
+			and t.trigger_next_time<![CDATA[ <= ]]> #{maxNextTime}
 	</select>
 
 	<update id="scheduleUpdate" parameterType="com.xxl.job.admin.core.model.XxlJobInfo"  >
 		UPDATE xxl_job_info
 		SET
 			trigger_last_time = #{triggerLastTime},
-			trigger_next_time = #{triggerNextTime}
+			trigger_next_time = #{triggerNextTime},
+			trigger_status = #{triggerStatus}
 		WHERE id = #{id}
 	</update>
 
